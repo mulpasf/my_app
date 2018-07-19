@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/mulpasf/my_app#readme",
   "dependencies": {
+    "ejs": "^2.6.1",
     "express": "^4.16.3"
   }
 }
