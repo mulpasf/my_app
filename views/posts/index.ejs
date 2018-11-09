@@ -16,6 +16,7 @@
     <ul>
       <% data.forEach(function(e){ %>
         <li>
+          <span><%= e._id %></span>
           <a href="/posts/<%= e._id %>"><%= e.title %></a>
           <span><%= e.createdAt.toLocaleDateString() %></span>
         </li>

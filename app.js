@@ -4,6 +4,7 @@ var app = express();
 var path = require('path');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
 
 //  connect database
 mongoose.connect("mongodb://testusr:123qwe..@ds143451.mlab.com:43451/mdb_test01");
@@ -30,6 +31,8 @@ app.set("view engine", 'ejs');
 //  set middlewares
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(methodOverride("_method"));
 
 //  set routes
 app.get('/posts', function(req,res){
@@ -37,12 +40,16 @@ app.get('/posts', function(req,res){
     if(err) return res.json({success:false, message:err});
     res.render("posts/index", {data:posts});
   });
-});
+}); // index
+
+app.get('/posts/new', function(req,res){
+  res.render("posts/new");
+}); // new
 
 app.post('/posts', function(req,res){
   Post.create(req.body.post,function (err,post) {
     if(err) return res.json({success:false, message:err});
-    res.json({success:true, data:post});
+    res.redirect('/posts');
   });
 });
 
@@ -51,20 +58,27 @@ app.get('/posts/:id', function(req,res){
     if(err) return res.json({success:false, message:err});
     res.render("posts/show", {data:post});
   });
+}); //show
+
+app.get('/posts/:id/edit', function(req,res){
+  Post.findById(req.params.id, function (err,post) {
+    if(err) return res.json({success:false, message:err});
+    res.render("posts/edit", {data:post});
+  });
 });
 
 app.put('/posts/:id', function(req,res){
   req.body.post.updateAt=Date.now();
   Post.findByIdAndUpdate(req.params.id, req.body.post, function (err,post){
     if(err) return res.json({success:false, message:err});
-    res.json({success:true, message:post._id+" updated"});
+    res.redirect('/posts/'+req.params.id);
   });
 });
 
 app.delete('/posts/:id', function(req,res){
   Post.findByIdAndRemove(req.params.id, function (err,post){
     if(err) return res.json({success:false, message:err});
-    res.json({success:true, message:post._id+" deleted"})
+    res.redirect('/posts');
   });
 });
 

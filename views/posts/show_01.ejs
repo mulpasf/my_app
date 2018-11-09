@@ -18,19 +18,17 @@
       <%= data.createdAt.toLocaleDateString() %> <br>
       <%= data.createdAt.toLocaleTimeString() %>
     </div>
-    <% if(data.updatedAt) { %>
+    <% if(data.updateAt) < %>
       <div class="time">Update at <br>
         <%= data.updatedAt.toLocaleDateString() %> <br>
         <%= data.updatedAt.toLocaleTimeString() %>
       </div>
     <% } %>
-    <p class="body"><%= data.body %><p>
+    <p class="body"><%= data.body %></p>
     <div class="tools">
-      <a href="/posts/<%=data._id%>/edit"><button>Edit</button></a>
+      <a href="/posts/<%=data.+id%>/edit"><button>Edit</button></a>
       <!-- Delete button here -->
-      <form class="btn_delete" action="/posts/<%=data._id%>?_method=delete" method="post">
-        <button type="submit">Delete</button>
-      </form>
+
     </div>
     <a href="/posts"><button>Back</button></a>
   </div>
