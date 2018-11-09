@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
 //  connect database
-mongoose.connect(process.env.MONGO_DB);
+mongoose.connect("mongodb://testusr:123qwe..@ds143451.mlab.com:43451/mdb_test01");
 var db = mongoose.connection;
 db.once("open",function () {
   console.log("DB connected!");
@@ -33,9 +33,9 @@ app.use(bodyParser.json());
 
 //  set routes
 app.get('/posts', function(req,res){
-  Post.find({}, function (err,posts) {
+  Post.find({}).sort('-createAt').exec(function (err,posts) {
     if(err) return res.json({success:false, message:err});
-    res.json({success:true, data:posts});
+    res.render("posts/index", {data:posts});
   });
 });
 
@@ -47,9 +47,9 @@ app.post('/posts', function(req,res){
 });
 
 app.get('/posts/:id', function(req,res){
-  Post.findById(req,params.id, function (err,post) {
+  Post.findById(req.params.id, function (err,post) {
     if(err) return res.json({success:false, message:err});
-    res.json({success:true, data:post});
+    res.render("posts/show", {data:post});
   });
 });
 
@@ -58,15 +58,15 @@ app.put('/posts/:id', function(req,res){
   Post.findByIdAndUpdate(req.params.id, req.body.post, function (err,post){
     if(err) return res.json({success:false, message:err});
     res.json({success:true, message:post._id+" updated"});
-  })
-})
+  });
+});
 
 app.delete('/posts/:id', function(req,res){
-  Post.findByIdAndRemove(req,params.id, function (err,post){
+  Post.findByIdAndRemove(req.params.id, function (err,post){
     if(err) return res.json({success:false, message:err});
     res.json({success:true, message:post._id+" deleted"})
-  })
-})
+  });
+});
 
 //  start Server
 app.listen(3000, function(){
